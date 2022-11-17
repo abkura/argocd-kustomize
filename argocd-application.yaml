@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: sample
+spec:   
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  project: default
+  source:
+    path: .
+    repoURL: https://github.com/abkura/argocd-kustomize-public.git
+    targetRevision: HEAD 
+    plugin:
+          name: kustomize2
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true 
