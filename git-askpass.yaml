@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: git-askpass
+  #namespace: NAMESPACE  # override this in kustomization.yaml, eg. see argocd-kustomization.yaml
+data:
+  git_askpass.sh: |
+    #!/usr/bin/env bash
+    set -euo pipefail
+    username="${GIT_USERNAME:-${GIT_USER:-}}"
+    password="${GIT_TOKEN:-${GIT_PASSWORD:-}}"
+    if [ "${1:-}" = get ]; then
+      echo "username=$username"
+      echo "password=$password"
+    elif [[ "$*" =~ Username ]]; then
+      echo "$username"
+    elif [[ "$*" =~ Password ]]; then
+      echo "$password"
+    fi

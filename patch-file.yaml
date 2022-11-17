@@ -1,0 +1,33 @@
+- op: add
+  path: /spec/template/spec/containers/0/env
+  value:
+    - name: GIT_ASKPASS
+      value: /usr/local/bin/git_askpass.sh
+    - name: GIT_USER
+      valueFrom:
+        secretKeyRef:
+          name: github-credentials
+          key: username
+    - name: GIT_TOKEN
+      valueFrom:
+        secretKeyRef:
+          name: github-credentials
+          key: token
+
+- op: add
+  path: /spec/template/spec/containers/0/volumeMounts/-
+  value:
+    name: git-askpass
+    mountPath: /usr/local/bin/git_askpass.sh
+    subPath: git_askpass.sh
+
+- op: add
+  path: /spec/template/spec/volumes/-
+  value:
+    name: git-askpass
+    configMap:
+      name: git-askpass
+      defaultMode: 0555
+      items:
+        - key: git_askpass.sh
+          path: git_askpass.sh
